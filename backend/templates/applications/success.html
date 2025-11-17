@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Заявка принята</title>
+
+  <!-- Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto', 'ui-sans-serif', 'system-ui'] },
+          boxShadow: {
+            air: '0 10px 30px rgba(0,0,0,.06)',
+            airlg: '0 24px 50px rgba(0,0,0,.09)'
+          },
+          borderRadius: {
+            '3xl': '1.5rem'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-zinc-50 min-h-screen font-sans">
+  <!-- Оверлей -->
+  <div id="overlay" class="fixed inset-0 bg-black/45 sm:bg-black/35 backdrop-blur-[2px]"></div>
+
+  <main
+    class="fixed inset-0 flex items-end sm:items-center justify-center p-3 sm:p-4 lg:p-6"
+    style="padding-bottom: calc(env(safe-area-inset-bottom, 0) + 12px);"
+  >
+    <!-- Модал -->
+    <div
+      role="dialog" aria-modal="true" aria-labelledby="dialog-title"
+      class="w-full max-w-md sm:max-w-lg bg-white rounded-3xl shadow-airlg
+             p-5 sm:p-7 lg:p-8 relative
+             translate-y-0 sm:translate-y-0 will-change-transform
+             transition-transform duration-200"
+      id="modal"
+    >
+      <!-- Иконка -->
+      <div class="mx-auto mb-4 grid h-14 w-14 sm:h-16 sm:w-16 place-items-center rounded-3xl bg-emerald-50 text-emerald-600">
+        <svg viewBox="0 0 24 24" class="h-8 w-8 sm:h-9 sm:w-9" fill="none" aria-hidden="true">
+          <path d="M9.2 12.6l2.2 2.2 4.6-5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.2" opacity=".35"/>
+        </svg>
+      </div>
+
+      <h2 id="dialog-title" class="text-xl sm:text-2xl font-semibold text-zinc-900 text-center">
+        Заявка принята
+      </h2>
+
+      {% if message %}
+        <p class="mt-2 text-center text-zinc-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+          {{ message }}
+        </p>
+      {% endif %}
+
+      <div class="mt-4 sm:mt-5 rounded-2xl border border-zinc-100 bg-zinc-50/70 p-3.5 sm:p-4.5 text-sm sm:text-base text-zinc-700 space-y-2">
+        <div class="flex items-center justify-between gap-4 py-0.5">
+          <span class="text-zinc-500 text-xs sm:text-sm">IMEI</span>
+          <b class="text-zinc-900 break-all text-sm sm:text-base">{{ application.imei }}</b>
+        </div>
+        <div class="flex items-center justify-between gap-4 py-0.5">
+          <span class="text-zinc-500 text-xs sm:text-sm">Телефон</span>
+          <b class="text-zinc-900 text-sm sm:text-base">{{ application.phone }}</b>
+        </div>
+        <div class="flex items-center justify-between gap-4 py-0.5">
+          <span class="text-zinc-500 text-xs sm:text-sm whitespace-nowrap">Номер заявки</span>
+          <b class="text-zinc-900 text-sm sm:text-base">#{{ application.application_number }}</b>
+        </div>
+      </div>
+
+      <!-- Кнопки -->
+      <div class="mt-5 sm:mt-6 grid gap-2 sm:grid-cols-2">
+        <a href="/"
+           class="inline-flex items-center justify-center rounded-2xl border border-zinc-200 bg-white
+                  px-4 py-3 sm:py-3 text-sm sm:text-base text-zinc-800 hover:bg-zinc-50 transition">
+          На главную
+        </a>
+        <a href="/"
+           class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 sm:py-3
+                  text-sm sm:text-base font-medium text-white hover:bg-emerald-700 transition">
+          Новая заявка
+        </a>
+      </div>
+
+      <!-- Микротекст -->
+      <p class="mt-4 sm:mt-5 text-center text-[11px] sm:text-xs text-zinc-500 leading-relaxed">
+        Заявление отправлено на рассмотрение. Уведомление о результате будет направлено по указанному номеру телефона.
+      </p>
+
+      <!-- Крестик -->
+      <a href="/"
+         class="absolute right-2.5 top-2.5 sm:right-3.5 sm:top-3.5 rounded-xl p-3 sm:p-2.5
+                text-zinc-400 hover:text-zinc-

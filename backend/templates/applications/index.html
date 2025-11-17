@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Верификация IMEI</title>
+
+  <!-- Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto', 'ui-sans-serif', 'system-ui'] },
+          boxShadow: {
+            air: '0 10px 30px rgba(0,0,0,.06)',
+            airlg: '0 22px 45px rgba(0,0,0,.09)'
+          },
+          borderRadius: {
+            '3xl': '1.5rem'
+          }
+        }
+      }
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body class="bg-zinc-50 min-h-screen flex items-center justify-center px-4 py-6 sm:py-10 font-sans">
+  <main class="w-full max-w-xl">
+    <!-- Лого / бренд -->
+    <div class="mb-7 sm:mb-8 flex flex-col items-center justify-center gap-2 select-none">
+      <div class="inline-flex items-center gap-2">
+        <span class="inline-flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white text-xl font-bold">
+          I
+        </span>
+        <span class="text-zinc-900 text-2xl sm:text-3xl font-semibold tracking-tight">
+          IMEI Verify
+        </span>
+      </div>
+      <p class="text-xs sm:text-sm text-zinc-500 text-center max-w-md">
+        Онлайн-форма для быстрой проверки и регистрации IMEI.
+      </p>
+    </div>
+
+    <section class="bg-white rounded-3xl shadow-airlg px-5 py-6 sm:px-8 sm:py-8">
+      <header class="mb-6 sm:mb-7 text-center">
+        <h1 class="text-2xl sm:text-3xl font-semibold text-zinc-900">
+          Верификация IMEI
+        </h1>
+        <p class="mt-2 text-zinc-500 text-sm sm:text-base">
+          Заполните форму — это займёт не более минуты.
+        </p>
+      </header>
+
+      {% if error %}
+        <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm sm:text-base text-red-700">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      {% if info %}
+        <div class="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm sm:text-base text-emerald-700">
+          {{ info }}
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'create_application' %}" class="space-y-5 sm:space-y-6" id="imei-form" novalidate>
+        {% csrf_token %}
+
+        <!-- IMEI -->
+        <div class="rounded-2xl border border-zinc-100 px-3.5 py-3.5 sm:px-4 sm:py-4">
+          <div class="flex items-baseline justify-between gap-2 mb-2">
+            <label for="imei" class="block text-xs font-semibold tracking-wide text-zinc-700 uppercase">
+              IMEI
+            </label>
+            <span class="text-[10px] sm:text-xs text-zinc-400">Обязательное поле</span>
+          </div>
+          <input
+            type="text"
+            inputmode="numeric"
+            pattern="\\d{15}"
+            name="imei"
+            id="imei"
+            maxlength="15"
+            required
+            placeholder="Введите 15 цифр IMEI"
+            class="w-full rounded-xl border-2 border-zinc-200 bg-white px-3.5 py-2.5 sm:px-4 sm:py-3
+                   text-base sm:text-lg text-zinc-900 placeholder:text-zinc-400
+                   focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
+          />
+          <p class="mt-1.5 text-xs sm:text-sm text-zinc-500">
+            Ровно 15 цифр без пробелов и дефисов (например, 356938035643809).
+          </p>
+        </div>
+
+        <!-- Телефон -->
+        <div class="rounded-2xl border px-3.5 py-3.5 sm:px-4 sm:py-4">
+          <div class="flex items-baseline justify-between gap-2 mb-2">
+            <label for="phone" class="block text-xs font-semibold tracking-wide text-zinc-700 uppercase">
+              Телефон для связи
+            </label>
+            <span class="text-[10px] sm:text-xs text-zinc-400">Обязательное поле</span>
+          </div>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="+7XXXXXXXXXX"
+            required
+            pattern="\\+7\\d{10}"
+            class="w-full rounded-xl border-2 border-zinc-200 bg-white px-3.5 py-2.5 sm:px-4 sm:py-3
+                   text-base sm:text-lg text-zinc-900 placeholder:text-zinc-400
+                   focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
+          />
+          <p class="mt-1.5 text-xs sm:text-sm text-zinc-500">
+            Формат: <span class="font-mono text-xs sm:text-sm">+7</span> и ещё 10 цифр (например, <span class="font-mono">+77011234567</span>).
+          </p>
+        </div>
+
+        <!-- Паспорт -->
+        <div class="rounded-2xl border border-zinc-100 px-3.5 py-3.5 sm:px-4 sm:py-4">
+          <div class="flex items-baseline justify-between gap-2 mb-2">
+            <label for="passport" class="block text-xs font-semibold tracking-wide text-zinc-700 uppercase">
+              Паспорт
+            </label>
+            <span class="text-[10px] sm:text-xs text-zinc-400">(Для иностранцев)</span>
+          </div>
+          <input
+            type="text"
+            name="passport"
+            id="passport"
+            placeholder="Номер документа без пробелов"
+            class="w-full rounded-xl border-2 border-zinc-200 bg-white px-3.5 py-2.5 sm:px-4 sm:py-3
+                   text-base sm:text-lg text-zinc-900 placeholder:text-zinc-400
+                   focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
+          />
+          <p class="mt-1.5 text-xs sm:text-sm text-zinc-500">
+            Можно оставить пустым, если документ пока недоступен.
+          </p>
+        </div>
+
+        <!-- Кнопка -->
+        <button
+          type="submit"
+          id="submitBtn"
+          class="group relative mt-1 w-full bg-emerald-600 text-white py-3.5 sm:py-4 rounded-2xl
+                 text-base sm:text-lg font-medium
+                 hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500
+                 transition active:scale-[.99] disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span class="inline-flex items-center justify-center gap-2">
+            <svg class="h-6 w-6 sm:h-6 sm:w-6 opacity-90 transition group-hover:scale-110" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class='text-xl'>Отправить заявку</span>
+          </span>
+          <span id="loading" class="hidden absolute inset-0 grid place-items-center">
+            <svg class="h-5 w-5 sm:h-6 sm:w-6 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-90" d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+      </form>
+
+      <!-- Небольшой доверительный блок -->
+      <div class="mt-6 flex items-start gap-2 text-xs sm:text-sm text-zinc-500">
+        <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9.5 12l1.8 1.8 3.2-3.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p>
+          Соединение защищено, данные передаются по шифрованному каналу и не передаются третьим лицам.
+        </p>
+      </div>
+    </section>
+
+    <!-- Футер -->
+    <p class="mt-6 sm:mt-7 text-center text-[11px] sm:text-xs text-zinc-500 max-w-lg mx-auto leading-relaxed">
+      Нажимая «Отправить заявку», вы подтверждаете корректность введённых данных и даёте согласие
+      на обработку персональных данных.
+    </p>
+  </main>
+
+  <script>
+    // UX: маски/валидация и лоадер
+    (function () {
+      const form = document.getElementById('imei-form');
+      const submit = document.getElementById('submitBtn');
+      const loading = document.getElementById('loading');
+      const imei = document.getElementById('imei');
+      const phone = document.getElementById('phone');
+
+      if (imei) {
+        imei.addEventListener('input', () => {
+          // Только цифры и максимум 15
+          imei.value = imei.value.replace(/\\D/g, '').slice(0, 15);
+        });
+      }
+
+      if (phone) {
+        phone.addEventListener('input', () => {
+          // Префикс +7 и только цифры после
+          if (!phone.value.startsWith('+7')) {
+            phone.value = '+7' + phone.value.replace(/\\D/g, '');
+          } else {
+            const rest = phone.value.slice(2).replace(/\\D/g, '').slice(0, 10);
+            phone.value = '+7' + rest;
+          }
+        });
+      }
+
+      form.addEventListener('submit', (e) => {
+        if (!form.checkValidity()) {
+          // даём браузеру показать стандартные подсказки
+          return;
+        }
+        submit.disabled = true;
+        loading.classList.remove('hidden');
+        const textSpan = submit.querySelector('span.inline-flex');
+        if (textSpan) textSpan.classList.add('invisible');
+      });
+    })();
+  </script>
+</body>
+</html>
