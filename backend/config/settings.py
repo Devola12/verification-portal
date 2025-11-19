@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-npgj)x6$(*#i@8ooc^y(vuu8+st_vdhzs)tx_g_zp_u$1vs5ip
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 
+    "imeireg.kz",
+    "www.imeireg.kz",
+]
 
 
 # Application definition
@@ -85,6 +88,11 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://imeireg.kz",
+    "https://www.imeireg.kz",  
+]
 
 
 # Password validation
