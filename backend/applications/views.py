@@ -42,7 +42,6 @@ def create_application(request):
 
         # Новая заявка — показываем success
         message = _(
-            "Заявка принята, номер #{num}. "
             "Компания прошла квалификационные требования и начнёт обработку "
             "заявок после подписания соглашения с РГП ГРС"
         ).format(num=application.application_number)
