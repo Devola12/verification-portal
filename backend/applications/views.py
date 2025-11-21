@@ -35,7 +35,7 @@ def create_application(request):
 
         if not created:
             # ВАЖНО: сначала переводим строку, потом форматируем
-            info_msg = _("Заявка #{num} уже в обработке.").format(num=application.application_number)
+            info_msg = _("Компания прошла квалификационные требования и начнёт обработку заявок после подписания соглашения с РГП ГРС")
             return render(request, "applications/index.html", {
                 "info": info_msg,
             })
